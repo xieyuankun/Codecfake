@@ -12,7 +12,6 @@ from torch.utils.data import ConcatDataset, DataLoader, WeightedRandomSampler, S
 import torch.utils.data.sampler as torch_sampler
 
 from evaluate_tDCF_asvspoof19 import compute_eer_and_tdcf
-from loss import *
 from collections import defaultdict
 from tqdm import tqdm, trange
 import random
@@ -41,8 +40,8 @@ def initParams():
 
     # Dataset prepare
     parser.add_argument("--feat", type=str, help="which feature to use", default='xls-r-5',
-                        choices=["CQCC", "LFCC"])
-    parser.add_argument("--feat_len", type=int, help="features le   ngth", default=201)
+                        choices=["mel", "xls-r-5"])
+    parser.add_argument("--feat_len", type=int, help="features length", default=201)
     parser.add_argument('--pad_chop', type=str2bool, nargs='?', const=True, default=False,
                         help="whether pad_chop in the dataset")
     parser.add_argument('--padding', type=str, default='repeat', choices=['zero', 'repeat', 'silence'],
@@ -191,7 +190,7 @@ def train(args):
     if args.CSAM:
         trainOriDataLoader = DataLoader(training_set, batch_size=int(args.batch_size),
                                         shuffle=False, num_workers=args.num_workers,
-                                        sampler=BatchSchedulerSampler(dataset=training_set,
+                                        sampler=CSAMSampler(dataset=training_set,
                             batch_size=int(args.batch_size),ratio_dataset1= train_codec_weight,ratio_dataset2 = train_asv_weight))
     if args.SAM or args.ASAM:
         trainOriDataLoader = DataLoader(training_set, batch_size=int(args.batch_size * args.ratio),

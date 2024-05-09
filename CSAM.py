@@ -19,7 +19,7 @@ def enable_running_stats(model):
     model.apply(_enable)
 
 
-class BatchSchedulerSampler(torch.utils.data.sampler.Sampler):
+class CSAMSampler(torch.utils.data.sampler.Sampler):
     def __init__(self, dataset, batch_size, ratio_dataset1, ratio_dataset2):
         self.dataset = dataset
         self.batch_size = batch_size
