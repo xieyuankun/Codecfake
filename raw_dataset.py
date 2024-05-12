@@ -216,30 +216,6 @@ class LLM_eval_trace(Dataset):
 
 
 
-class codecfake_evalbatch(Dataset):
-    def __init__(self):
-        super(codecfake_evalbatch, self).__init__()
-        self.path_to_audio = '/data2/codecfake/codec_final/C4'
-        self.path_to_protocol = '/data2/codecfake/codec_final/label/C4.txt'
-        with open(self.path_to_protocol, 'r') as f:
-            audio_info = [info.strip().split() for info in f.readlines()]
-            self.all_info = audio_info
-    def __len__(self):
-        return len(self.all_info)
-
-    def __getitem__(self, idx):
-        filename,label,_ = self.all_info[idx]
-        filepath = os.path.join(self.path_to_audio, filename)
-        waveform, sr = torchaudio_load(filepath)
-        waveform = pad_dataset(waveform).to('cpu')
-        print(sr)
-        return waveform, filename, label
-
-    def collate_fn(self, samples):
-        return default_collate(samples)
-    
-
-
 class codecfake_dev(Dataset):
     def __init__(self):
         super(codecfake_dev, self).__init__()

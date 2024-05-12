@@ -48,9 +48,11 @@ def initParams():
                         help="how to pad short utterance")
 
     parser.add_argument('-m', '--model', help='Model arch', default='W2VAASIST',
-                        choices=['cnn', 'resnet', 'lcnn', 'res2net', 'ecapa','speechformer','W2VAASIST'])
+                        choices=['lcnn','W2VAASIST'])
 
     # Training hyperparameters
+    parser.add_argument('--train_task', type=str, default='co-train', choices=['19LA','codecfake','co-train'], help="training dataset")
+
     parser.add_argument('--num_epochs', type=int, default=10, help="Number of epochs for training")
     parser.add_argument('--batch_size', type=int, default=128, help="Mini batch size for training")
     parser.add_argument('--lr', type=float, default=0.0005, help="learning rate")
@@ -165,43 +167,73 @@ def train(args):
             weight_decay=0.0005
         )
 
-    # domain_19train,dev
-    asv_training_set = ASVspoof2019(args.access_type, args.path_to_features1, 'train',
-                                args.feat, feat_len=args.feat_len, pad_chop=args.pad_chop, padding=args.padding)
-    asv_validation_set = ASVspoof2019(args.access_type, args.path_to_features1, 'dev',
-                                  args.feat, feat_len=args.feat_len, pad_chop=args.pad_chop, padding=args.padding)
-    
-    # domain_codectrain, dev
-    codec_training_set = codecfake(args.access_type, args.path_to_features, 'train',
-                                args.feat, feat_len=args.feat_len, pad_chop=args.pad_chop, padding=args.padding)
-    codec_validation_set = codecfake(args.access_type, args.path_to_features, 'dev',
-                                  args.feat, feat_len=args.feat_len, pad_chop=args.pad_chop, padding=args.padding)
-    
-    # concat dataset
-    training_set = ConcatDataset([codec_training_set, asv_training_set])
-    validation_set = ConcatDataset([codec_validation_set, asv_validation_set])
-
-    train_total_samples_codec = len(codec_training_set)
-    train_total_samples_asv = len(asv_training_set)
-    train_total_samples_combined = len(training_set)
-    train_codec_weight = train_total_samples_codec / train_total_samples_combined  
-    train_asv_weight = train_total_samples_asv / train_total_samples_combined 
-
-    if args.CSAM:
-        trainOriDataLoader = DataLoader(training_set, batch_size=int(args.batch_size),
+    if args.train_task == '19LA':
+        asv_training_set = ASVspoof2019(args.access_type, args.path_to_features1, 'train',
+                                    args.feat, feat_len=args.feat_len, pad_chop=args.pad_chop, padding=args.padding)
+        asv_validation_set = ASVspoof2019(args.access_type, args.path_to_features1, 'dev',
+                                      args.feat, feat_len=args.feat_len, pad_chop=args.pad_chop, padding=args.padding)
+        trainOriDataLoader = DataLoader(asv_training_set, batch_size=int(args.batch_size),
                                         shuffle=False, num_workers=args.num_workers,
-                                        sampler=CSAMSampler(dataset=training_set,
-                            batch_size=int(args.batch_size),ratio_dataset1= train_codec_weight,ratio_dataset2 = train_asv_weight))
-    if args.SAM or args.ASAM:
-        trainOriDataLoader = DataLoader(training_set, batch_size=int(args.batch_size * args.ratio),
-                            shuffle=False, num_workers=args.num_workers,pin_memory=True,
-                            sampler=torch_sampler.SubsetRandomSampler(range(len(training_set))))
+                                        sampler=torch_sampler.SubsetRandomSampler(range(25380)))
+        valOriDataLoader = DataLoader(asv_validation_set, batch_size=int(args.batch_size),
+                                      shuffle=False, num_workers=args.num_workers,
+                                      sampler=torch_sampler.SubsetRandomSampler(range(24844)))
+
+    if args.train_task == 'codecfake':
+        codec_training_set = codecfake(args.access_type, args.path_to_features, 'train',
+                                    args.feat, feat_len=args.feat_len, pad_chop=args.pad_chop, padding=args.padding)
+        codec_validation_set = codecfake(args.access_type, args.path_to_features, 'dev',
+                                      args.feat, feat_len=args.feat_len, pad_chop=args.pad_chop, padding=args.padding)
+        trainOriDataLoader = DataLoader(codec_training_set, batch_size=int(args.batch_size ),
+                                        shuffle=False, num_workers=args.num_workers, persistent_workers=True,pin_memory= True,
+                                        sampler=torch_sampler.SubsetRandomSampler(range(740747)))
+        valOriDataLoader = DataLoader(codec_validation_set, batch_size=int(args.batch_size),
+                                      shuffle=False, num_workers=args.num_workers,persistent_workers=True,
+                                      sampler=torch_sampler.SubsetRandomSampler(range(92596)))
+
+    if args.train_task == 'co-train':
+        # domain_19train,dev
+        asv_training_set = ASVspoof2019(args.access_type, args.path_to_features1, 'train',
+                                    args.feat, feat_len=args.feat_len, pad_chop=args.pad_chop, padding=args.padding)
+        asv_validation_set = ASVspoof2019(args.access_type, args.path_to_features1, 'dev',
+                                      args.feat, feat_len=args.feat_len, pad_chop=args.pad_chop, padding=args.padding)
+
+        # domain_codectrain, dev
+        codec_training_set = codecfake(args.access_type, args.path_to_features, 'train',
+                                    args.feat, feat_len=args.feat_len, pad_chop=args.pad_chop, padding=args.padding)
+        codec_validation_set = codecfake(args.access_type, args.path_to_features, 'dev',
+                                      args.feat, feat_len=args.feat_len, pad_chop=args.pad_chop, padding=args.padding)
+
+        # concat dataset
+        training_set = ConcatDataset([codec_training_set, asv_training_set])
+        validation_set = ConcatDataset([codec_validation_set, asv_validation_set])
+
+        train_total_samples_codec = len(codec_training_set)
+        train_total_samples_asv = len(asv_training_set)
+        train_total_samples_combined = len(training_set)
+        train_codec_weight = train_total_samples_codec / train_total_samples_combined
+        train_asv_weight = train_total_samples_asv / train_total_samples_combined
+
+        if args.CSAM:
+            trainOriDataLoader = DataLoader(training_set, batch_size=int(args.batch_size),
+                                            shuffle=False, num_workers=args.num_workers,
+                                            sampler=CSAMSampler(dataset=training_set,
+                                batch_size=int(args.batch_size),ratio_dataset1= train_codec_weight,ratio_dataset2 = train_asv_weight))
+
+        if args.SAM or args.ASAM:
+            trainOriDataLoader = DataLoader(training_set, batch_size=int(args.batch_size * args.ratio),
+                                shuffle=False, num_workers=args.num_workers,pin_memory=True,
+                                sampler=torch_sampler.SubsetRandomSampler(range(len(training_set))))
+        valOriDataLoader = DataLoader(validation_set, batch_size=int(args.batch_size),
+                                      shuffle=False, num_workers=args.num_workers,
+                                      sampler=torch_sampler.SubsetRandomSampler(range(len(validation_set))))
+
+
+
+
 
 
     trainOri_flow = iter(trainOriDataLoader)
-    valOriDataLoader = DataLoader(validation_set, batch_size=int(args.batch_size),
-                                  shuffle=False, num_workers=args.num_workers,
-                                  sampler=torch_sampler.SubsetRandomSampler(range(len(validation_set))))
     valOri_flow = iter(valOriDataLoader)
 
 

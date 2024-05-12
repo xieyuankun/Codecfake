@@ -16,7 +16,7 @@ def init():
     parser.add_argument('--model_folder', type=str, help="directory for pretrained model",
                         default='./models/try/')
     parser.add_argument("-t", "--task", type=str, help="which dataset you would liek to score on",
-                        required=False, default='19eval', choices=["19eval","ITW","codecfake"])
+                        required=True, default='19eval', choices=["19eval","ITW","codecfake"])
     parser.add_argument("--gpu", type=str, help="GPU index", default="2")
     args = parser.parse_args()
 
@@ -98,12 +98,12 @@ def generate_score(task, feat_model_path):
                 audio_fn, score.item(), "spoof" if labels== "spoof" else "bonafide"))
 
     if task == 'codecfake':
-        for condition in ['C1','C2','C3','C4','C5','C6','C7','L1','L2','L3']:
+        for condition in ['C1','C2','C3','C4','C5','C6','C7','A1','A2','A3']:
             file_path = './result/{}_result.txt'.format(condition)
             with open(file_path, 'w') as cm_score_file:
-                asvspoof_raw = dataset.codecfake_eval(type=condition)
-                for idx in tqdm(range(len(ITW_raw))):
-                    waveform, filename, labels  = ITW_raw[idx]
+                codecfake_raw = dataset.codecfake_eval(type=condition)
+                for idx in tqdm(range(len(codecfake_raw))):
+                    waveform, filename, labels  = codecfake_raw[idx]
                     waveform = waveform.to(device)
                     waveform = pad_dataset(waveform).to('cpu')
                     input_values = processor(waveform, sampling_rate=16000,
@@ -119,7 +119,6 @@ def generate_score(task, feat_model_path):
                     cm_score_file.write('%s %s %s\n' % (
                     audio_fn, score.item(), "fake" if labels== "fake" else "real"))
 
- 
 
 if __name__ == "__main__":
     args = init()
