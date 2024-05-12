@@ -91,11 +91,27 @@ python evaluate_score.py
 ```
 You will get the final test EER.
 
-## 5. Pre-trained model
+###  5. Pre-trained model
 We provide pre-trained models and score results as mentioned in our paper, you can use our pre-trained models testing on other condition.
 The inference step can refer section 4.
 
+Vocoder-trained ADD models:
+<p align="center">
+  <img width="380" height="320" src="figure/vocoder.png">
+</p>
+
+```
+./pretrained_model/vocoder_mellcnn/anti-spoofing_feat_model.pt
+./pretrained_model/vocoder_w2v2lcnn/anti-spoofing_feat_model.pt
+./pretrained_model/vocoder_w2v2aasist/anti-spoofing_feat_model.pt
+```
+
+
 Codec-trained ADD models:
+<p align="center">
+  <img width="380" height="320" src="figure/codec.png">
+</p>
+
 ```
 ./pretrained_model/codec_mellcnn/anti-spoofing_feat_model.pt
 ./pretrained_model/codec_w2v2lcnn/anti-spoofing_feat_model.pt
@@ -103,6 +119,10 @@ Codec-trained ADD models:
 ```
 
 Co-trained ADD model:
+<p align="center">
+  <img width="380" height="320" src="figure/co-train.png">
+</p>
+
 ```
 ./pretrained_model/cotrain_w2v2aasist/anti-spoofing_feat_model.pt
 ```
