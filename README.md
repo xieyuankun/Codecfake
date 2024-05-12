@@ -97,7 +97,7 @@ The inference step can refer section 4.
 
 Vocoder-trained ADD models:
 <p align="center">
-  <img width="380" height="320" src="figure/vocoder.png">
+  <img src="figure/vocoder.png">
 </p>
 
 ```
@@ -109,7 +109,7 @@ Vocoder-trained ADD models:
 
 Codec-trained ADD models:
 <p align="center">
-  <img width="380" height="320" src="figure/codec.png">
+  <img src="figure/codec.png">
 </p>
 
 ```
@@ -120,7 +120,7 @@ Codec-trained ADD models:
 
 Co-trained ADD model:
 <p align="center">
-  <img width="380" height="320" src="figure/co-train.png">
+  <img src="figure/co-train.png">
 </p>
 
 ```
