@@ -1,9 +1,9 @@
 # The Codecfake Dataset and Countermeasures for the Universally Detection of Deepfake Audio
 
 <p align="center">
-  <img width="400" height="320" src="figure/ALM1.png">
+  <img width="380" height="320" src="figure/ALM1.png">
 </p>
-<h1 align="center">ALM-based deepfake audio</h1>
+<h2 align="center">ALM-based deepfake audio</h1>
 This is the official repo of our work titled "The Codecfake Dataset and Countermeasures for the Universally Detection of Deepfake Audio," which was available on arxiv at https://arxiv.org/abs/2405.04880.
 
 ## 📚 Codecfake Dataset
