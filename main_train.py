@@ -72,7 +72,7 @@ def initParams():
     # generalized strategy 
     parser.add_argument('--SAM', type= bool, default= False, help="use SAM")
     parser.add_argument('--ASAM', type= bool, default= False, help="use ASAM")
-    parser.add_argument('--CSAM', type= bool, default= True, help="use CSAM")
+    parser.add_argument('--CSAM', type= bool, default= False, help="use CSAM")
 
     args = parser.parse_args()
 

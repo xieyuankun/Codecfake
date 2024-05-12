@@ -4,7 +4,7 @@
   <img width="380" height="320" src="figure/ALM1.png">
 </p>
 <h2 align="center">ALM-based deepfake audio</h1>
-This is the official repo of our work titled "The Codecfake Dataset and Countermeasures for the Universally Detection of Deepfake Audio," which was available on arxiv at https://arxiv.org/abs/2405.04880.
+This is the official repo of our work titled The Codecfake Dataset and Countermeasures for the Universally Detection of Deepfake Audio, which was available on arxiv at https://arxiv.org/abs/2405.04880.
 
 ## 📚 Codecfake Dataset
 Due to platform restrictions on the size of zenodo repositories, we have divided the Codecfake dataset into various subsets as shown in the table below:
@@ -63,23 +63,64 @@ Please ensure the data and label position are correct. If you need to adjust, pl
 
 After preprocess, the hidden states of wav2vec2 will be saved in `/data2/xyk/codecfake/preprocess_xls-r-5`. 
 
-### 3. Train Model
+### 3. Train
 
-Train on different task:
+Training on different task:
 ```
 python main_train.py -t 19LA 
 python main_train.py -t codecfake
 python main_train.py -t co-train 
 ```
-Before running the `main_train.py`, please change the `path_to_features` according to the files' location on your machine.
+Before running the `main_train.py`, please change the `path_to_features` according to the location of pre-processed featrue
+on your machine.
 
 If training is slow, consider adjusting the num_worker parameter in conjunction with the number of CPU cores. 
 The default is set to 8. If performance remains slow, you may explore multi-GPU training in args.
 
 
-## 4. Test
+### 4. Test
+Testing on different datasets was performed using the best pre-trained model, which is saved in `./models/try/anti-spoofing_feat_model.pt`:
 ```
-python generate_score.py 
-python evaluate_score.py
+python generate_score.py -t 19LA
+python generate_score.py -t ITW
+python generate_score.py -t codecfake
+```
+The result will be saved in `./result`.
+```
+python evaluate_score.py 
 ```
 You will get the final test EER.
+
+## 5. Pre-trained model
+We provide pre-trained models and score results as mentioned in our paper, you can use our pre-trained models testing on other condition.
+The inference step can refer section 4.
+
+Codec-trained ADD models:
+```
+./pretrained_model/codec_mellcnn/anti-spoofing_feat_model.pt
+./pretrained_model/codec_w2v2lcnn/anti-spoofing_feat_model.pt
+./pretrained_model/codec_w2v2aasist/anti-spoofing_feat_model.pt
+```
+
+Co-trained ADD model:
+```
+./pretrained_model/cotrain_w2v2aasist/anti-spoofing_feat_model.pt
+```
+
+
+
+
+## 📝 Citation
+
+If you find our dataset or countermeasure is useful to your research, please cite it as follows:
+
+```
+@article{xie2024codecfake,
+  title={The Codecfake Dataset and Countermeasures for the Universally Detection of Deepfake Audio},
+  author={Xie, Yuankun and Lu, Yi and Fu, Ruibo and Wen, Zhengqi and Wang, Zhiyong and Tao, Jianhua and Qi, Xin and Wang, Xiaopeng and Liu, Yukun and Cheng, Haonan and others},
+  journal={arXiv preprint arXiv:2405.04880},
+  year={2024}
+}
+```
+
+
