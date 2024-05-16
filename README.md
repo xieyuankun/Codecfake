@@ -19,7 +19,7 @@ Due to platform restrictions on the size of zenodo repositories, we have divided
 |test set (part 1 of 2)|Codec test: C1.zip - C6.cip & ALM test: A1.zip - A3.zip| https://zenodo.org/records/11169781
 |test set (part 2 of 2)|Codec unseen test: C7.zip|https://zenodo.org/records/11125029
 
-The Codecfake dataset is licensed with a CC BY-NC-ND 4.0 license.
+The Codecfake dataset is licensed with CC BY-NC-ND 4.0 license.
 
 ## 🛡️ Countermeasure
 ### 1. Data prepraring
