@@ -12,11 +12,11 @@ Due to platform restrictions on the size of zenodo repositories, we have divided
 
 |Codecfake dataset | Description     | Link                                                                                                                                                                                                                                                                                                                                                        |
 |------------------|----------------|--------------|
-|training set (part 1 of 3) & label|train_split.zip & train_split.z01 - train_split.z05| [https://zenodo.org/records/11171708](https://zenodo.org/records/13838106)|
-|training set (part 2 of 3) | train_split.z06 - train_split.z10| [https://zenodo.org/records/11171720](https://zenodo.org/records/13841652)
-|training set (part 3 of 3)| train_split.z11 - train_split.z16| [https://zenodo.org/records/11171724](https://zenodo.org/records/13853860)
-|development set|dev_split.zip & dev_split.z01 - dev_split.z02| [https://zenodo.org/records/11169872](https://zenodo.org/records/13841216)
-|test set (part 1 of 2)|Codec test: C1.zip - C6.cip & ALM test: A1.zip - A3.zip| [https://zenodo.org/records/11169781](https://zenodo.org/records/13838823)
+|training set (part 1 of 3) & label|train_split.zip & train_split.z01 - train_split.z05| [https://zenodo.org/records/13838106](https://zenodo.org/records/13838106)|
+|training set (part 2 of 3) | train_split.z06 - train_split.z10| [https://zenodo.org/records/13841652](https://zenodo.org/records/13841652)
+|training set (part 3 of 3)| train_split.z11 - train_split.z16| [https://zenodo.org/records/13853860](https://zenodo.org/records/13853860)
+|development set|dev_split.zip & dev_split.z01 - dev_split.z02| [https://zenodo.org/records/13841216](https://zenodo.org/records/13841216)
+|test set (part 1 of 2)|Codec test: C1.zip - C6.cip & ALM test: A1.zip - A3.zip| [https://zenodo.org/records/13838823](https://zenodo.org/records/13838823)
 |test set (part 2 of 2)|Codec unseen test: C7.zip| [https://zenodo.org/records/11125029](https://zenodo.org/records/11125029)
 
 The Codecfake dataset is licensed with CC BY-NC-ND 4.0 license.
